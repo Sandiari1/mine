@@ -26,6 +26,8 @@
       justify-content: center;
       background: linear-gradient(to right, #ff9a9e, #fad0c4);
       transition: opacity 1s;
+      padding: 5vw;
+      box-sizing: border-box;
     }
     .hidden {
       opacity: 0;
@@ -33,18 +35,18 @@
     }
     h1 {
       color: white;
-      font-size: 2rem;
-      margin-bottom: 20px;
+      font-size: 6vw; /* fleksibel */
+      margin-bottom: 5vh;
     }
     button {
-      padding: 10px 20px;
-      font-size: 1.2rem;
+      padding: 2vh 5vw;
+      font-size: 5vw;
       border: none;
       border-radius: 10px;
       background: #ff6f91;
       color: white;
       cursor: pointer;
-      margin: 10px;
+      margin: 2vh;
     }
     button:hover {
       background: #ff3e6c;
@@ -59,12 +61,12 @@
       opacity: 0;
       transform: scale(0.5);
       transition: all 1.5s ease-in-out;
-      margin-top: 20px;
+      margin-top: 3vh;
       z-index: 2;
     }
     .photo img {
-      max-width: 220px;
-      border-radius: 20px;
+      max-width: 90%;
+      border-radius: 15px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     .photo.show {
@@ -73,8 +75,9 @@
     }
     .gif-bear img,
     .gif-bear2 img {
-      max-width: 180px;
-      margin-bottom: 20px;
+      max-width: 70%;
+      height: auto;
+      margin-bottom: 4vh;
     }
   </style>
 </head>
@@ -142,8 +145,7 @@
     // ====== Animasi Love Partikel ======
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    resizeCanvas();
 
     let particles = [];
     let heartPoints = [];
@@ -159,15 +161,13 @@
 
     class Particle {
       constructor(x, y) {
-        // posisi awal acak (efek bom)
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        // posisi tujuan (heart)
         this.targetX = x;
         this.targetY = y;
-        this.size = Math.random() * 20 + 10;
+        this.size = Math.random() * 15 + 8;
         this.speed = Math.random() * 0.03 + 0.01;
-        this.delay = Math.random() * 50; // jeda sebelum mulai gerak
+        this.delay = Math.random() * 50;
       }
       update() {
         if (this.delay > 0) {
@@ -185,7 +185,7 @@
 
     function initParticles() {
       particles = [];
-      let scale = 20;
+      let scale = Math.min(canvas.width, canvas.height) / 25; // otomatis skala sesuai layar
       let offsetX = canvas.width / 2;
       let offsetY = canvas.height / 2;
       heartPoints.forEach((p) => {
@@ -209,16 +209,18 @@
       initParticles();
       animate();
 
-      // Foto muncul setelah beberapa detik
+      // Foto muncul setelah 3 detik
       setTimeout(() => {
         document.getElementById("photo").classList.add("show");
       }, 3000);
     }
 
-    window.addEventListener("resize", () => {
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    });
+    }
+
+    window.addEventListener("resize", resizeCanvas);
   </script>
 </body>
 </html>
