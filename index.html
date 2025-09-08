@@ -102,13 +102,51 @@
   </div>
 
   <!-- Screen 3 -->
-  <div class="screen hidden" id="screen3">
-    <h1>I Love You Wulan ❤️</h1>
-    <canvas id="canvas"></canvas>
-    <div class="photo" id="photo">
-      <img src="doi.jpg" alt="Foto Pacarku">
-    </div>
+<div class="screen hidden" id="screen3">
+  <h1 class="love-text">I Love You Wulan ❤️</h1>
+  <canvas id="canvas"></canvas>
+  <div class="photo" id="photo">
+    <img src="doi.jpg" alt="Foto Pacarku">
   </div>
+</div>
+
+<style>
+  #screen3 {
+    position: relative;
+  }
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* partikel */
+  }
+  .love-text {
+    position: relative;
+    z-index: 3; /* teks di atas partikel */
+    font-size: 6vw;
+    color: white;
+    margin-bottom: 4vh;
+  }
+  .photo {
+    z-index: 4; /* foto paling atas */
+  }
+</style>
+
+<script>
+  function initParticles() {
+    particles = [];
+    // perkecil scale supaya love tidak kepotong
+    let scale = Math.min(canvas.width, canvas.height) / 35; 
+    let offsetX = canvas.width / 2;
+    let offsetY = canvas.height / 2;
+    heartPoints.forEach((p) => {
+      let targetX = p.x * scale + offsetX;
+      let targetY = p.y * scale + offsetY;
+      particles.push(new Particle(targetX, targetY));
+    });
+  }
+</script>
+
 
   <!-- Musik -->
   <audio id="music" src="beautiful.mp3"></audio>
