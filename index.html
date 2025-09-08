@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -39,8 +39,7 @@
       opacity: 0;
       pointer-events: none;
     }
-    
-    /* Typography Responsive */
+
     h1 {
       color: white;
       font-weight: bold;
@@ -48,89 +47,7 @@
       margin-bottom: 30px;
       line-height: 1.2;
     }
-    
-    /* Mobile First Design */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: clamp(24px, 6vw, 36px);
-        margin-bottom: 20px;
-        padding: 0 10px;
-      }
-      
-      .gif-bear img,
-      .gif-bear2 img {
-        max-width: 60%;
-        height: auto;
-        margin-bottom: 20px;
-      }
-      
-      button {
-        padding: 15px 30px;
-        font-size: clamp(16px, 4vw, 20px);
-        margin: 10px;
-        min-width: 120px;
-      }
-      
-      .photo img {
-        max-width: 85%;
-        max-height: 40vh;
-        object-fit: cover;
-      }
-    }
-    
-    /* Tablet */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      h1 {
-        font-size: clamp(32px, 5vw, 48px);
-        margin-bottom: 25px;
-      }
-      
-      .gif-bear img,
-      .gif-bear2 img {
-        max-width: 50%;
-        margin-bottom: 25px;
-      }
-      
-      button {
-        padding: 18px 40px;
-        font-size: clamp(18px, 3vw, 24px);
-        margin: 12px;
-        min-width: 140px;
-      }
-      
-      .photo img {
-        max-width: 70%;
-        max-height: 50vh;
-      }
-    }
-    
-    /* Desktop */
-    @media (min-width: 1025px) {
-      h1 {
-        font-size: clamp(36px, 4vw, 64px);
-        margin-bottom: 40px;
-      }
-      
-      .gif-bear img,
-      .gif-bear2 img {
-        max-width: 40%;
-        margin-bottom: 30px;
-      }
-      
-      button {
-        padding: 20px 50px;
-        font-size: clamp(20px, 2vw, 28px);
-        margin: 15px;
-        min-width: 160px;
-      }
-      
-      .photo img {
-        max-width: 60%;
-        max-height: 60vh;
-      }
-    }
-    
-    /* Button Styles */
+
     button {
       border: none;
       border-radius: 25px;
@@ -140,6 +57,10 @@
       font-weight: bold;
       box-shadow: 0 4px 15px rgba(255, 111, 145, 0.4);
       transition: all 0.3s ease;
+      padding: 15px 30px;
+      font-size: 18px;
+      margin: 10px;
+      min-width: 120px;
     }
     
     button:hover {
@@ -151,8 +72,14 @@
     button:active {
       transform: translateY(0);
     }
-    
-    /* Canvas Responsive */
+
+    /* Tombol play musik darurat */
+    #playMusicBtn {
+      margin-top: 20px;
+      background: linear-gradient(45deg, #00c853, #00e676);
+      display: none; /* awalnya sembunyi */
+    }
+
     canvas {
       position: absolute;
       top: 0;
@@ -161,8 +88,7 @@
       width: 100%;
       height: 100%;
     }
-    
-    /* Photo Animation */
+
     .photo {
       opacity: 0;
       transform: scale(0.5) rotate(-5deg);
@@ -175,6 +101,8 @@
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
       transition: transform 0.3s ease;
+      max-width: 80%;
+      height: auto;
     }
     
     .photo img:hover {
@@ -185,13 +113,7 @@
       opacity: 1;
       transform: scale(1) rotate(0deg);
     }
-    
-    /* Screen 3 Specific */
-    #screen3 {
-      position: relative;
-      overflow: hidden;
-    }
-    
+
     .love-text {
       position: relative;
       z-index: 3;
@@ -204,8 +126,7 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-    
-    /* Loading Animation */
+
     .loading {
       display: inline-block;
       width: 20px;
@@ -219,37 +140,6 @@
     
     @keyframes spin {
       to { transform: rotate(360deg); }
-    }
-    
-    /* Heart particles optimization for mobile */
-    @media (max-width: 768px) {
-      .heart-particle {
-        font-size: 16px !important;
-      }
-    }
-    
-    /* Landscape mobile fix */
-    @media (max-height: 500px) and (orientation: landscape) {
-      h1 {
-        font-size: clamp(20px, 4vh, 28px);
-        margin-bottom: 15px;
-      }
-      
-      .gif-bear img,
-      .gif-bear2 img {
-        max-width: 30%;
-        margin-bottom: 15px;
-      }
-      
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        margin: 8px;
-      }
-      
-      .photo img {
-        max-height: 35vh;
-      }
     }
   </style>
 </head>
@@ -280,43 +170,38 @@
     <div class="photo" id="photo">
       <img src="doi.jpg" alt="Foto Pacarku" onerror="this.style.display='none'">
     </div>
+    <button id="playMusicBtn">▶️ Play Musik</button>
   </div>
 
-  <!-- Audio (optional) -->
+  <!-- Audio -->
   <audio id="music" src="beautiful.mp3" preload="auto"></audio>
 
   <script>
-    // DOM Elements
     const screen1 = document.getElementById("screen1");
     const screen2 = document.getElementById("screen2");
     const screen3 = document.getElementById("screen3");
     const yesBtn = document.getElementById("yesBtn");
     const nextBtn = document.getElementById("nextBtn");
+    const playMusicBtn = document.getElementById("playMusicBtn");
     const music = document.getElementById("music");
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Global Variables
     let particles = [];
     let heartPoints = [];
     let animationId;
 
-    // Utility Functions
     function isMobile() {
       return window.innerWidth <= 768;
     }
 
     function showNoMessage() {
-      if (confirm('Masa No sih 😢\nCoba lagi dong!')) {
-        // Do nothing, just close the alert
-      }
+      if (confirm('Masa No sih 😢\nCoba lagi dong!')) {}
     }
 
-    // Screen Transitions
     yesBtn.addEventListener("click", () => {
       yesBtn.innerHTML = 'Yes ❤️ <span class="loading"></span>';
       yesBtn.disabled = true;
-      
       setTimeout(() => {
         screen1.classList.add("hidden");
         setTimeout(() => {
@@ -328,27 +213,30 @@
     nextBtn.addEventListener("click", () => {
       nextBtn.innerHTML = 'Loading... <span class="loading"></span>';
       nextBtn.disabled = true;
-      
       setTimeout(() => {
         screen2.classList.add("hidden");
         setTimeout(() => {
           screen3.classList.remove("hidden");
           startAnimation();
-          
-          // Musik mulai dari menit 1:01
           if (music) {
-            music.currentTime = 61;
-            music.play().catch(e => console.log('Audio autoplay blocked'));
+            music.currentTime = 61; // mulai dari menit 1:01
+            music.muted = false; 
+            music.play().catch(() => {
+              playMusicBtn.style.display = "block"; // munculin tombol kalau autoplay gagal
+            });
           }
         }, 500);
       }, 1000);
     });
 
-    // Heart Shape Generation
+    playMusicBtn.addEventListener("click", () => {
+      music.play();
+      playMusicBtn.style.display = "none";
+    });
+
     function createHeartShape() {
       heartPoints = [];
-      const precision = isMobile() ? 0.2 : 0.15; // Lower precision for mobile
-      
+      const precision = isMobile() ? 0.2 : 0.15;
       for (let t = 0; t < Math.PI * 2; t += precision) {
         let x = 16 * Math.pow(Math.sin(t), 3);
         let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -356,20 +244,16 @@
       }
     }
 
-    // Particle Class
     class Particle {
       constructor(x, y) {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.targetX = x;
         this.targetY = y;
-        this.size = isMobile() ? 
-          Math.random() * 12 + 8 : 
-          Math.random() * 18 + 10;
+        this.size = isMobile() ? Math.random() * 12 + 8 : Math.random() * 18 + 10;
         this.speed = Math.random() * 0.04 + 0.02;
         this.delay = Math.random() * 60;
       }
-      
       update() {
         if (this.delay > 0) {
           this.delay--;
@@ -378,19 +262,15 @@
           this.y += (this.targetY - this.y) * this.speed;
         }
       }
-      
       draw() {
         ctx.font = `${this.size}px Arial`;
         ctx.fillText("❤️", this.x, this.y);
       }
     }
 
-    // Canvas Setup
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      
-      // Reinitialize particles on resize
       if (particles.length > 0) {
         initParticles();
       }
@@ -401,7 +281,6 @@
       const scale = Math.min(canvas.width, canvas.height) / (isMobile() ? 30 : 25);
       const offsetX = canvas.width / 2;
       const offsetY = canvas.height / 2 + (isMobile() ? -50 : -30);
-      
       heartPoints.forEach((p) => {
         let targetX = p.x * scale + offsetX;
         let targetY = p.y * scale + offsetY;
@@ -411,12 +290,10 @@
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
       particles.forEach((p) => {
         p.update();
         p.draw();
       });
-      
       animationId = requestAnimationFrame(animate);
     }
 
@@ -424,36 +301,16 @@
       createHeartShape();
       initParticles();
       animate();
-
-      // Show photo after delay
       setTimeout(() => {
         document.getElementById("photo").classList.add("show");
       }, isMobile() ? 2000 : 3000);
     }
 
-    // Event Listeners
     window.addEventListener("resize", resizeCanvas);
     window.addEventListener("orientationchange", () => {
       setTimeout(resizeCanvas, 100);
     });
-
-    // Initialize
     resizeCanvas();
-
-    // Touch event optimization for mobile
-    if ('ontouchstart' in window) {
-      document.addEventListener('touchstart', function() {}, {passive: true});
-    }
-
-    // Prevent zoom on double tap
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', function (event) {
-      var now = (new Date()).getTime();
-      if (now - lastTouchEnd <= 300) {
-        event.preventDefault();
-      }
-      lastTouchEnd = now;
-    }, false);
   </script>
 </body>
 </html>
