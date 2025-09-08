@@ -33,7 +33,7 @@
     }
     h1 {
       color: white;
-      font-size: 2.5rem;
+      font-size: 2rem;
       margin-bottom: 20px;
     }
     button {
@@ -49,13 +49,11 @@
     button:hover {
       background: #ff3e6c;
     }
-    #yesBtn {
-      position: absolute;
-    }
     canvas {
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 1;
     }
     .photo {
       opacity: 0;
@@ -73,46 +71,71 @@
       opacity: 1;
       transform: scale(1);
     }
+    .gif-bear img,
+    .gif-bear2 img {
+      max-width: 180px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
-  <!-- Screen Pertanyaan -->
+  <!-- Screen 1 -->
   <div class="screen" id="screen1">
-    <h1>Kamu sayang aku ga? 😏</h1>
+    <div class="gif-bear">
+      <img src="bear.gif" alt="Teddy Bear Love">
+    </div>
+    <h1>Kamu sayang ga sama aku? 😏</h1>
     <button id="yesBtn">Yes ❤️</button>
-    <button onclick="alert('Salah jawab 🤨 coba lagi!')">No 💔</button>
+    <button onclick="alert('Masa No sih 😢')">No 💔</button>
   </div>
 
-  <!-- Screen Animasi -->
+  <!-- Screen 2 -->
   <div class="screen hidden" id="screen2">
-    <h1>Hai Sayang ❤️</h1>
+    <div class="gif-bear2">
+      <img src="hug2.gif" alt="Teddy Bear Love">
+    </div>
+    <h1>Cape ya hari ini? Semangat ya Sayang ❤️</h1>
+    <button id="nextBtn">Lanjut ➡️</button>
+  </div>
+
+  <!-- Screen 3 -->
+  <div class="screen hidden" id="screen3">
+    <h1>I Love You Wulan ❤️</h1>
     <canvas id="canvas"></canvas>
     <div class="photo" id="photo">
-      <img src="FOTO_DOI.jpg" alt="Foto Pacarku">
+      <img src="doi.jpg" alt="Foto Pacarku">
     </div>
   </div>
 
-  <audio id="music" src="MUSIK.mp3"></audio>
+  <!-- Musik -->
+  <audio id="music" src="beautiful.mp3"></audio>
 
   <script>
     const screen1 = document.getElementById("screen1");
     const screen2 = document.getElementById("screen2");
+    const screen3 = document.getElementById("screen3");
     const yesBtn = document.getElementById("yesBtn");
+    const nextBtn = document.getElementById("nextBtn");
     const music = document.getElementById("music");
 
-    // Biar tombol Yes gerak-gerak
-    yesBtn.addEventListener("mouseover", () => {
-      yesBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
-      yesBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
-    });
-
+    // Pindah ke Screen 2
     yesBtn.addEventListener("click", () => {
-      // Masuk ke screen 2
       screen1.classList.add("hidden");
       setTimeout(() => {
         screen2.classList.remove("hidden");
+      }, 1000);
+    });
+
+    // Pindah ke Screen 3
+    nextBtn.addEventListener("click", () => {
+      screen2.classList.add("hidden");
+      setTimeout(() => {
+        screen3.classList.remove("hidden");
         startAnimation();
-        music.play(); // Play musik
+
+        // Musik mulai dari menit 1:01
+        music.currentTime = 61;
+        music.play();
       }, 1000);
     });
 
@@ -136,16 +159,23 @@
 
     class Particle {
       constructor(x, y) {
+        // posisi awal acak (efek bom)
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
+        // posisi tujuan (heart)
         this.targetX = x;
         this.targetY = y;
         this.size = Math.random() * 20 + 10;
         this.speed = Math.random() * 0.03 + 0.01;
+        this.delay = Math.random() * 50; // jeda sebelum mulai gerak
       }
       update() {
-        this.x += (this.targetX - this.x) * this.speed;
-        this.y += (this.targetY - this.y) * this.speed;
+        if (this.delay > 0) {
+          this.delay--;
+        } else {
+          this.x += (this.targetX - this.x) * this.speed;
+          this.y += (this.targetY - this.y) * this.speed;
+        }
       }
       draw() {
         ctx.font = `${this.size}px Arial`;
@@ -155,11 +185,13 @@
 
     function initParticles() {
       particles = [];
-      let scale = 20; 
+      let scale = 20;
       let offsetX = canvas.width / 2;
       let offsetY = canvas.height / 2;
       heartPoints.forEach((p) => {
-        particles.push(new Particle(p.x * scale + offsetX, p.y * scale + offsetY));
+        let targetX = p.x * scale + offsetX;
+        let targetY = p.y * scale + offsetY;
+        particles.push(new Particle(targetX, targetY));
       });
     }
 
@@ -177,6 +209,7 @@
       initParticles();
       animate();
 
+      // Foto muncul setelah beberapa detik
       setTimeout(() => {
         document.getElementById("photo").classList.add("show");
       }, 3000);
