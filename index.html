@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buat Kamu ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .screen {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      transition: opacity 1s;
+    }
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background: #ff6f91;
+      color: white;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background: #ff3e6c;
+    }
+    #yesBtn {
+      position: absolute;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .photo {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 1.5s ease-in-out;
+      margin-top: 20px;
+      z-index: 2;
+    }
+    .photo img {
+      max-width: 220px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .photo.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Screen Pertanyaan -->
+  <div class="screen" id="screen1">
+    <h1>Kamu sayang aku ga? 😏</h1>
+    <button id="yesBtn">Yes ❤️</button>
+    <button onclick="alert('Salah jawab 🤨 coba lagi!')">No 💔</button>
+  </div>
+
+  <!-- Screen Animasi -->
+  <div class="screen hidden" id="screen2">
+    <h1>Hai Sayang ❤️</h1>
+    <canvas id="canvas"></canvas>
+    <div class="photo" id="photo">
+      <img src="FOTO_DOI.jpg" alt="Foto Pacarku">
+    </div>
+  </div>
+
+  <audio id="music" src="MUSIK.mp3"></audio>
+
+  <script>
+    const screen1 = document.getElementById("screen1");
+    const screen2 = document.getElementById("screen2");
+    const yesBtn = document.getElementById("yesBtn");
+    const music = document.getElementById("music");
+
+    // Biar tombol Yes gerak-gerak
+    yesBtn.addEventListener("mouseover", () => {
+      yesBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+      yesBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    });
+
+    yesBtn.addEventListener("click", () => {
+      // Masuk ke screen 2
+      screen1.classList.add("hidden");
+      setTimeout(() => {
+        screen2.classList.remove("hidden");
+        startAnimation();
+        music.play(); // Play musik
+      }, 1000);
+    });
+
+    // ====== Animasi Love Partikel ======
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    let heartPoints = [];
+
+    function createHeartShape() {
+      heartPoints = [];
+      for (let t = 0; t < Math.PI * 2; t += 0.15) {
+        let x = 16 * Math.pow(Math.sin(t), 3);
+        let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        heartPoints.push({ x: x, y: y });
+      }
+    }
+
+    class Particle {
+      constructor(x, y) {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.targetX = x;
+        this.targetY = y;
+        this.size = Math.random() * 20 + 10;
+        this.speed = Math.random() * 0.03 + 0.01;
+      }
+      update() {
+        this.x += (this.targetX - this.x) * this.speed;
+        this.y += (this.targetY - this.y) * this.speed;
+      }
+      draw() {
+        ctx.font = `${this.size}px Arial`;
+        ctx.fillText("❤️", this.x, this.y);
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      let scale = 20; 
+      let offsetX = canvas.width / 2;
+      let offsetY = canvas.height / 2;
+      heartPoints.forEach((p) => {
+        particles.push(new Particle(p.x * scale + offsetX, p.y * scale + offsetY));
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    function startAnimation() {
+      createHeartShape();
+      initParticles();
+      animate();
+
+      setTimeout(() => {
+        document.getElementById("photo").classList.add("show");
+      }, 3000);
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
